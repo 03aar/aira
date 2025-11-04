@@ -25,8 +25,9 @@ const RightPanel: React.FC = () => {
     const colors = {
       frontend: 'bg-aira-blue',
       backend: 'bg-aira-violet',
-      database: 'bg-aira-yellow',
+      data: 'bg-aira-yellow',
       ai: 'bg-aira-cyan',
+      infrastructure: 'bg-gray-500',
       integration: 'bg-aira-coral',
     };
     return colors[type];

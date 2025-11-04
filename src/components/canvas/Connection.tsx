@@ -44,9 +44,10 @@ const Connection: React.FC<ConnectionProps> = ({ connection, sourceNode, targetN
 
   // Get connection color based on type
   const getConnectionColor = () => {
-    if (connection.type === 'data') return '#9A7AFF';
-    if (connection.type === 'api') return '#4B9EFF';
-    return '#42F0F5';
+    if (connection.type === 'data-flow') return '#9A7AFF';
+    if (connection.type === 'api-call') return '#4B9EFF';
+    if (connection.type === 'event-trigger') return '#42F0F5';
+    return '#6E83F7'; // dependency
   };
 
   const color = getConnectionColor();

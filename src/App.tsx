@@ -1,12 +1,12 @@
 import { AppProvider } from './contexts/AppContext';
 import { OnboardingProvider } from './contexts/OnboardingContext';
-import Dashboard from './pages/Dashboard';
+import DashboardRefined from './pages/DashboardRefined';
 
 function App() {
   return (
     <AppProvider>
       <OnboardingProvider>
-        <Dashboard />
+        <DashboardRefined />
       </OnboardingProvider>
     </AppProvider>
   );

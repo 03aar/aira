@@ -26,7 +26,7 @@ const Node: React.FC<NodeProps> = ({ node, index }) => {
         shadow: 'rgba(154, 122, 255, 0.4)',
         ring: 'ring-violet-400',
       },
-      database: {
+      data: {
         bg: 'from-yellow-400 to-yellow-500',
         shadow: 'rgba(248, 214, 110, 0.4)',
         ring: 'ring-yellow-400',
@@ -35,6 +35,11 @@ const Node: React.FC<NodeProps> = ({ node, index }) => {
         bg: 'from-cyan-400 to-cyan-500',
         shadow: 'rgba(66, 240, 245, 0.4)',
         ring: 'ring-cyan-400',
+      },
+      infrastructure: {
+        bg: 'from-gray-400 to-gray-500',
+        shadow: 'rgba(156, 163, 175, 0.4)',
+        ring: 'ring-gray-400',
       },
       integration: {
         bg: 'from-red-400 to-red-500',
@@ -89,7 +94,7 @@ const Node: React.FC<NodeProps> = ({ node, index }) => {
         whileTap={{ scale: 0.95 }}
       >
         {/* Inner pulse animation */}
-        {node.active && (
+        {node.status === 'healthy' && (
           <motion.div
             className={`absolute inset-0 rounded-full bg-white`}
             animate={{
@@ -163,7 +168,7 @@ const Node: React.FC<NodeProps> = ({ node, index }) => {
       </AnimatePresence>
 
       {/* Activity indicator */}
-      {node.active && (
+      {node.status === 'healthy' && (
         <motion.div
           className="absolute -top-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-white shadow-md"
           animate={{
