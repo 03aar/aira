@@ -32,7 +32,7 @@ const DashboardRefined: React.FC = () => {
   }, [completed]);
 
   return (
-    <div className="w-full h-screen overflow-hidden bg-white">
+    <div className="w-full h-screen flex flex-col bg-white">
       <AnimatePresence>
         {showSplash && <Splash onComplete={handleSplashComplete} />}
       </AnimatePresence>
@@ -48,26 +48,26 @@ const DashboardRefined: React.FC = () => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.5 }}
-              className="w-full h-full"
+              className="w-full h-full flex flex-col"
             >
-              {/* Top Navigation - Refined */}
+              {/* Top Navigation - Refined (Fixed) */}
               <TopNavRefined />
 
-              {/* Left Sidebar - Refined (5 icons) */}
+              {/* Left Sidebar - Refined (Fixed, 5 icons) */}
               <LeftSidebarRefined />
 
-              {/* Main Canvas with Floating Search */}
-              <div className="pt-16 pb-16">
+              {/* Main Canvas Container - Scrollable */}
+              <div className="flex-1 relative overflow-auto">
                 <CanvasRefined />
               </div>
 
-              {/* Right Panel (node details) */}
+              {/* Right Panel (node details) - Fixed */}
               <RightPanel />
 
-              {/* Insights Panel */}
+              {/* Insights Panel - Fixed */}
               <InsightsPanel />
 
-              {/* Bottom Timeline - Refined */}
+              {/* Bottom Timeline - Refined (Fixed) */}
               <BottomTimelineRefined />
             </motion.div>
           )}

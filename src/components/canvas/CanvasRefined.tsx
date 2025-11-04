@@ -12,14 +12,14 @@ const CanvasRefined: React.FC = () => {
   const scale = zoomLevel / 100;
 
   return (
-    <div className="fixed inset-0 overflow-hidden bg-white">
+    <div className="relative w-full min-h-full bg-white">
       {/* Floating Search Bar */}
       <FloatingSearch />
 
       {/* Grid Background */}
       {showGrid && (
         <div
-          className="absolute inset-0"
+          className="absolute inset-0 pointer-events-none"
           style={{
             backgroundImage: 'radial-gradient(circle, #E2E8F0 2px, transparent 2px)',
             backgroundSize: `${40 * scale}px ${40 * scale}px`,
@@ -29,7 +29,7 @@ const CanvasRefined: React.FC = () => {
 
       {/* Gradient Background (subtle) */}
       <div
-        className="absolute inset-0 opacity-30"
+        className="absolute inset-0 opacity-30 pointer-events-none"
         style={{
           background: 'radial-gradient(circle at 50% 50%, rgba(240, 244, 255, 0.5) 0%, transparent 70%)',
         }}
@@ -38,7 +38,7 @@ const CanvasRefined: React.FC = () => {
       {/* Canvas Container */}
       <motion.div
         ref={canvasRef}
-        className="absolute inset-0"
+        className="relative w-full min-h-screen"
         style={{
           transform: `scale(${scale})`,
           transformOrigin: 'center center',
