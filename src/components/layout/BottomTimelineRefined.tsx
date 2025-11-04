@@ -4,7 +4,7 @@ import { Play, Pause, Clock } from 'lucide-react';
 
 const BottomTimelineRefined: React.FC = () => {
   const [isPlaying, setIsPlaying] = useState(false);
-  const [timelineValue, setTimelineValue] = useState(75);
+  const [timelineValue] = useState(75);
 
   const milestones = [
     { position: 0, version: 'v1.0.0', date: 'Jan 2024' },

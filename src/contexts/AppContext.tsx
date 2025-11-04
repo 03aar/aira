@@ -1,14 +1,34 @@
 import React, { createContext, useContext, useState, type ReactNode } from 'react';
-import type { AppState, ViewMode, Theme, User, Node, Connection, Insight } from '../types';
+import type { ViewMode, Theme, User, Node, Connection, Insight } from '../types';
 
-interface AppContextType extends AppState {
+interface AppContextType {
+  // View & Display
+  viewMode: ViewMode;
   setViewMode: (mode: ViewMode) => void;
+  theme: Theme;
   setTheme: (theme: Theme) => void;
+
+  // Selection
+  selectedNode?: string;
   selectNode: (nodeId?: string) => void;
+
+  // Canvas
+  zoomLevel: number;
   setZoomLevel: (level: number) => void;
+
+  // Panel States
+  showGrid: boolean;
   toggleGrid: () => void;
+  showInsights: boolean;
   toggleInsights: () => void;
+  showComments: boolean;
   toggleComments: () => void;
+
+  // User
+  currentUser: User;
+  activeUsers: User[];
+
+  // Data
   nodes: Node[];
   connections: Connection[];
   insights: Insight[];
@@ -138,6 +158,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
       title: 'Unused API endpoints detected',
       description: '3 endpoints haven\'t been called in 60 days',
       severity: 'warning',
+      category: 'architecture',
       nodeId: '2',
       timestamp: new Date().toISOString(),
     },
@@ -146,6 +167,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
       title: 'High latency detected',
       description: 'ML Recommender showing increased response times',
       severity: 'critical',
+      category: 'performance',
       nodeId: '5',
       timestamp: new Date().toISOString(),
     },
@@ -153,7 +175,8 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
       id: 'i3',
       title: 'Optimization opportunity',
       description: 'Database queries can be cached for better performance',
-      severity: 'info',
+      severity: 'suggestion',
+      category: 'performance',
       nodeId: '4',
       timestamp: new Date().toISOString(),
     },

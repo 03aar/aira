@@ -14,7 +14,7 @@ const NodeRefined: React.FC<NodeProps> = ({ node, index }) => {
 
   const isSelected = selectedNode === node.id;
 
-  const getNodeStyle = (type: NodeType['type'], status: NodeType['status']) => {
+  const getNodeStyle = (type: NodeType['type'], _status: NodeType['status']) => {
     const styles = {
       frontend: {
         bg: 'from-[#5B9EFF] to-[#4B8EEF]',

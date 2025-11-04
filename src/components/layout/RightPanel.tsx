@@ -59,7 +59,7 @@ const RightPanel: React.FC = () => {
                     >
                       {node.type.charAt(0).toUpperCase() + node.type.slice(1)}
                     </span>
-                    {node.active && (
+                    {node.status === 'healthy' && (
                       <div className="flex items-center gap-1 text-green-600">
                         <motion.div
                           className="w-2 h-2 rounded-full bg-green-600"

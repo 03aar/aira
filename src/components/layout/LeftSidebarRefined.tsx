@@ -14,7 +14,7 @@ interface Tool {
 }
 
 const LeftSidebarRefined: React.FC = () => {
-  const { toggleInsights, showInsights } = useApp();
+  const { toggleInsights } = useApp();
   const [activeTool, setActiveTool] = useState<ToolId>('home');
   const [hoveredTool, setHoveredTool] = useState<ToolId | null>(null);
 

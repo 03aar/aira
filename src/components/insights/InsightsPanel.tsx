@@ -23,12 +23,19 @@ const InsightsPanel: React.FC = () => {
         icon: <AlertTriangle size={20} className="text-amber-600" />,
         badge: 'bg-amber-600',
       },
-      info: {
+      suggestion: {
         bg: 'bg-cyan-50',
         border: 'border-cyan-200',
         text: 'text-cyan-900',
         icon: <Info size={20} className="text-cyan-600" />,
         badge: 'bg-cyan-600',
+      },
+      discovery: {
+        bg: 'bg-purple-50',
+        border: 'border-purple-200',
+        text: 'text-purple-900',
+        icon: <Info size={20} className="text-purple-600" />,
+        badge: 'bg-purple-600',
       },
     };
     return configs[severity];
