@@ -40,8 +40,10 @@ Aira is a next-generation intelligence platform that allows organizations to see
 
 ### Prerequisites
 
-- Node.js 18+
-- npm or yarn
+- **Node.js** 18+ and npm
+- **Python** 3.9+ and pip
+- **OpenAI API Key** (for AI features)
+- **Git** (for repository analysis)
 
 ### Installation
 
@@ -51,18 +53,43 @@ git clone <repository-url>
 cd aira
 ```
 
-2. **Install dependencies**
+2. **Set up Backend**
 ```bash
+cd backend
+pip install -r requirements.txt
+cp .env.example .env
+# Edit .env and add your OPENAI_API_KEY
+```
+
+3. **Set up Frontend**
+```bash
+cd ..
 npm install
 ```
 
-3. **Start the development server**
+### Running the Application
+
+**Terminal 1 - Backend:**
+```bash
+cd backend
+python main.py
+```
+Server starts at `http://localhost:8000`
+
+**Terminal 2 - Frontend:**
 ```bash
 npm run dev
 ```
 
-4. **Open your browser**
+**Open your browser**
 Navigate to `http://localhost:5173`
+
+### First Steps
+
+1. Complete the onboarding flow
+2. Try analyzing a GitHub repository (e.g., `https://github.com/vercel/next.js`)
+3. Ask AI questions about your architecture
+4. Run simulations to test scenarios
 
 ### Building for Production
 
@@ -171,12 +198,46 @@ aira/
 
 ## 🛠️ Tech Stack
 
+### Frontend
 - **Framework**: React 18 + TypeScript
 - **Build Tool**: Vite
+- **Canvas**: React Flow (coming soon)
 - **Styling**: Tailwind CSS
 - **Animations**: Framer Motion
 - **Icons**: Lucide React
-- **State Management**: React Context API
+- **State**: Zustand + Context API
+
+### Backend
+- **Framework**: FastAPI + Python
+- **AI**: OpenAI GPT-4
+- **Git**: GitPython
+- **Server**: Uvicorn
+- **Validation**: Pydantic
+
+## 🔧 Backend Features
+
+### GitHub Repository Analysis
+- Automatically clones and analyzes any public GitHub repository
+- Detects languages, frameworks, and architecture patterns
+- Extracts APIs, databases, and integrations
+- Supports Node.js/TypeScript and Python (more coming)
+
+### AI Chat Integration
+- Natural language architecture commands
+- Context-aware responses
+- Automatic graph modifications
+- Best practice recommendations
+
+### Simulation Engine
+- **Removal Simulation**: Impact analysis when removing components
+- **Scaling Simulation**: Bottleneck detection at scale
+- **Failure Simulation**: Cascade effect analysis
+- **Performance Modeling**: Latency and capacity estimation
+
+### API Documentation
+Visit `http://localhost:8000/docs` for interactive Swagger UI documentation.
+
+For more backend details, see [backend/README.md](backend/README.md)
 
 ## 🎯 Roadmap
 
