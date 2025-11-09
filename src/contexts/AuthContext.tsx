@@ -3,8 +3,10 @@
  * Manages user authentication state across the application
  */
 
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { authAPI, User, LoginResponse } from '../lib/auth-api';
+import React, { createContext, useContext, useState, useEffect } from 'react';
+import type { ReactNode } from 'react';
+import { authAPI } from '../lib/auth-api';
+import type { User, LoginResponse } from '../lib/auth-api';
 
 interface AuthContextType {
   user: User | null;

@@ -1,6 +1,6 @@
 /**
- * Login Page
- * Beautiful glassmorphism design with smooth animations
+ * Signup Page
+ * Beautiful glassmorphism design with password strength indicator
  */
 
 import React, { useState } from 'react';
@@ -8,16 +8,17 @@ import { motion } from 'framer-motion';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Link, useNavigate } from 'react-router-dom';
-import { Eye, EyeOff, Mail, Lock, ArrowRight, Loader2 } from 'lucide-react';
+import { Eye, EyeOff, Mail, Lock, User, ArrowRight, Loader2, CheckCircle2, XCircle } from 'lucide-react';
 
 import { useAuth } from '../../contexts/AuthContext';
-import { loginSchema } from '../../lib/validations/auth';
-import type { LoginFormData } from '../../lib/validations/auth';
+import { signupSchema } from '../../lib/validations/auth';
+import type { SignupFormData } from '../../lib/validations/auth';
 
-const LoginPage: React.FC = () => {
+const SignupPage: React.FC = () => {
   const navigate = useNavigate();
-  const { login } = useAuth();
+  const { signup } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -25,25 +26,51 @@ const LoginPage: React.FC = () => {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<LoginFormData>({
-    resolver: zodResolver(loginSchema),
+    watch,
+  } = useForm<SignupFormData & { confirmPassword: string }>({
+    resolver: zodResolver(
+      signupSchema.extend({
+        confirmPassword: signupSchema.shape.password,
+      }).refine((data) => data.password === data.confirmPassword, {
+        message: "Passwords don't match",
+        path: ["confirmPassword"],
+      })
+    ),
   });
 
-  const onSubmit = async (data: LoginFormData) => {
+  const password = watch('password', '');
+
+  const onSubmit = async (data: SignupFormData & { confirmPassword: string }) => {
     setIsLoading(true);
     setError(null);
 
-    const result = await login(data.email, data.password);
+    const { confirmPassword, ...signupData } = data;
+    const result = await signup(signupData);
 
     if (result.success) {
-      // Success! Navigate to dashboard
-      navigate('/dashboard');
+      // Success! Redirect to email verification notice
+      navigate('/verify-email-notice');
     } else {
-      setError(result.error || 'Login failed');
+      setError(result.error || 'Signup failed');
     }
 
     setIsLoading(false);
   };
+
+  // Password strength checker
+  const getPasswordStrength = (pwd: string) => {
+    let strength = 0;
+    if (pwd.length >= 8) strength++;
+    if (/[A-Z]/.test(pwd)) strength++;
+    if (/[a-z]/.test(pwd)) strength++;
+    if (/[0-9]/.test(pwd)) strength++;
+    if (/[^A-Za-z0-9]/.test(pwd)) strength++;
+    return strength;
+  };
+
+  const passwordStrength = getPasswordStrength(password);
+  const strengthColors = ['bg-red-500', 'bg-orange-500', 'bg-yellow-500', 'bg-lime-500', 'bg-green-500'];
+  const strengthLabels = ['Very Weak', 'Weak', 'Fair', 'Good', 'Strong'];
 
   return (
     <div className="min-h-screen w-full flex items-center justify-center bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 p-4">
@@ -75,7 +102,7 @@ const LoginPage: React.FC = () => {
         />
       </div>
 
-      {/* Login Card */}
+      {/* Signup Card */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -106,10 +133,10 @@ const LoginPage: React.FC = () => {
             </motion.div>
 
             <h1 className="text-3xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">
-              Welcome back
+              Create Account
             </h1>
             <p className="text-gray-600 mt-2">
-              Sign in to continue to AIRA
+              Start visualizing your architecture with AIRA
             </p>
           </div>
 
@@ -124,7 +151,7 @@ const LoginPage: React.FC = () => {
             </motion.div>
           )}
 
-          {/* Login Form */}
+          {/* Signup Form */}
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
             {/* Email Input */}
             <div>
@@ -155,6 +182,62 @@ const LoginPage: React.FC = () => {
               {errors.email && (
                 <p className="mt-1.5 text-sm text-red-600">{errors.email.message}</p>
               )}
+            </div>
+
+            {/* Username Input */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Username
+              </label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                  <User size={20} className="text-gray-400" />
+                </div>
+                <input
+                  {...register('username')}
+                  type="text"
+                  placeholder="johndoe"
+                  className={`
+                    w-full pl-12 pr-4 py-3 rounded-xl
+                    bg-white/50 backdrop-blur-sm
+                    border-2 transition-all
+                    ${errors.username
+                      ? 'border-red-300 focus:border-red-500'
+                      : 'border-gray-200 focus:border-purple-500'
+                    }
+                    focus:outline-none focus:ring-4 focus:ring-purple-500/10
+                    placeholder:text-gray-400
+                  `}
+                />
+              </div>
+              {errors.username && (
+                <p className="mt-1.5 text-sm text-red-600">{errors.username.message}</p>
+              )}
+            </div>
+
+            {/* Full Name Input (Optional) */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Full Name <span className="text-gray-400">(optional)</span>
+              </label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                  <User size={20} className="text-gray-400" />
+                </div>
+                <input
+                  {...register('fullName')}
+                  type="text"
+                  placeholder="John Doe"
+                  className="
+                    w-full pl-12 pr-4 py-3 rounded-xl
+                    bg-white/50 backdrop-blur-sm
+                    border-2 border-gray-200 transition-all
+                    focus:border-purple-500
+                    focus:outline-none focus:ring-4 focus:ring-purple-500/10
+                    placeholder:text-gray-400
+                  "
+                />
+              </div>
             </div>
 
             {/* Password Input */}
@@ -190,19 +273,75 @@ const LoginPage: React.FC = () => {
                   {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
                 </button>
               </div>
+
+              {/* Password Strength Indicator */}
+              {password && (
+                <div className="mt-2">
+                  <div className="flex gap-1 mb-1">
+                    {[0, 1, 2, 3, 4].map((i) => (
+                      <div
+                        key={i}
+                        className={`h-1 flex-1 rounded-full transition-all ${
+                          i < passwordStrength ? strengthColors[passwordStrength - 1] : 'bg-gray-200'
+                        }`}
+                      />
+                    ))}
+                  </div>
+                  <p className={`text-xs ${passwordStrength >= 3 ? 'text-green-600' : 'text-orange-600'}`}>
+                    Password strength: {strengthLabels[passwordStrength - 1] || 'Very Weak'}
+                  </p>
+                </div>
+              )}
+
+              {/* Password Requirements */}
+              <div className="mt-2 space-y-1">
+                <PasswordRequirement met={password.length >= 8} text="At least 8 characters" />
+                <PasswordRequirement met={/[A-Z]/.test(password)} text="One uppercase letter" />
+                <PasswordRequirement met={/[a-z]/.test(password)} text="One lowercase letter" />
+                <PasswordRequirement met={/[0-9]/.test(password)} text="One number" />
+              </div>
+
               {errors.password && (
                 <p className="mt-1.5 text-sm text-red-600">{errors.password.message}</p>
               )}
             </div>
 
-            {/* Forgot Password Link */}
-            <div className="flex justify-end">
-              <Link
-                to="/forgot-password"
-                className="text-sm text-purple-600 hover:text-purple-700 font-medium transition-colors"
-              >
-                Forgot password?
-              </Link>
+            {/* Confirm Password Input */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Confirm Password
+              </label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                  <Lock size={20} className="text-gray-400" />
+                </div>
+                <input
+                  {...register('confirmPassword')}
+                  type={showConfirmPassword ? 'text' : 'password'}
+                  placeholder="••••••••"
+                  className={`
+                    w-full pl-12 pr-12 py-3 rounded-xl
+                    bg-white/50 backdrop-blur-sm
+                    border-2 transition-all
+                    ${errors.confirmPassword
+                      ? 'border-red-300 focus:border-red-500'
+                      : 'border-gray-200 focus:border-purple-500'
+                    }
+                    focus:outline-none focus:ring-4 focus:ring-purple-500/10
+                    placeholder:text-gray-400
+                  `}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  className="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400 hover:text-gray-600 transition-colors"
+                >
+                  {showConfirmPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                </button>
+              </div>
+              {errors.confirmPassword && (
+                <p className="mt-1.5 text-sm text-red-600">{errors.confirmPassword.message}</p>
+              )}
             </div>
 
             {/* Submit Button */}
@@ -225,11 +364,11 @@ const LoginPage: React.FC = () => {
               {isLoading ? (
                 <>
                   <Loader2 size={20} className="animate-spin" />
-                  Signing in...
+                  Creating account...
                 </>
               ) : (
                 <>
-                  Sign in
+                  Create account
                   <ArrowRight size={20} />
                 </>
               )}
@@ -243,13 +382,13 @@ const LoginPage: React.FC = () => {
             </div>
             <div className="relative flex justify-center text-sm">
               <span className="px-4 bg-white/70 text-gray-500">
-                Don't have an account?
+                Already have an account?
               </span>
             </div>
           </div>
 
-          {/* Sign up link */}
-          <Link to="/signup">
+          {/* Login link */}
+          <Link to="/login">
             <motion.button
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
@@ -263,14 +402,14 @@ const LoginPage: React.FC = () => {
                 transition-all duration-300
               "
             >
-              Create an account
+              Sign in instead
             </motion.button>
           </Link>
         </div>
 
         {/* Footer text */}
         <p className="text-center text-sm text-gray-600 mt-6">
-          By signing in, you agree to our{' '}
+          By creating an account, you agree to our{' '}
           <Link to="/terms" className="text-purple-600 hover:underline">
             Terms of Service
           </Link>{' '}
@@ -284,4 +423,16 @@ const LoginPage: React.FC = () => {
   );
 };
 
-export default LoginPage;
+// Password requirement indicator component
+const PasswordRequirement: React.FC<{ met: boolean; text: string }> = ({ met, text }) => (
+  <div className="flex items-center gap-2 text-xs">
+    {met ? (
+      <CheckCircle2 size={14} className="text-green-500" />
+    ) : (
+      <XCircle size={14} className="text-gray-300" />
+    )}
+    <span className={met ? 'text-green-600' : 'text-gray-500'}>{text}</span>
+  </div>
+);
+
+export default SignupPage;

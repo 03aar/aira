@@ -137,7 +137,7 @@ export const useGraphStore = create<GraphStore>((set, get) => ({
   setConnections: (connections) => set({ connections }),
 
   // Selection
-  selectNode: (id) => set((state) => ({
+  selectNode: (id) => set(() => ({
     selectedNodeIds: [id],
     rightPanelOpen: true
   })),
