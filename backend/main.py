@@ -13,7 +13,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # Import routers
-from routers import analyze, chat, simulate, export_router, share
+from routers import analyze, chat, simulate, export_router, share, auth
 
 # Create FastAPI app
 app = FastAPI(
@@ -21,6 +21,17 @@ app = FastAPI(
     description="AI-powered architecture visualization and analysis",
     version="1.0.0"
 )
+
+# Initialize database on startup
+@app.on_event("startup")
+async def startup_event():
+    """Initialize database tables on startup"""
+    try:
+        from models.database import init_db
+        init_db()
+        print("✅ Database initialized successfully")
+    except Exception as e:
+        print(f"⚠️  Database initialization error: {e}")
 
 # CORS middleware
 app.add_middleware(
@@ -57,6 +68,7 @@ async def health_check():
     }
 
 # Include routers
+app.include_router(auth.router, prefix="/api/auth", tags=["authentication"])
 app.include_router(analyze.router, prefix="/api/analyze", tags=["analyze"])
 app.include_router(chat.router, prefix="/api/chat", tags=["chat"])
 app.include_router(simulate.router, prefix="/api/simulate", tags=["simulate"])
