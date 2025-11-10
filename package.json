@@ -10,6 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@emotion/is-prop-valid": "^1.2.1",
     "@hookform/resolvers": "^5.2.2",
     "@react-spring/web": "^10.0.3",
     "@types/d3": "^7.4.3",
