@@ -6,10 +6,26 @@ Aira is a next-generation intelligence platform that allows organizations to see
 
 ## ✨ Features
 
+### 🔐 **Production-Grade Authentication**
+- Beautiful glassmorphism login/signup UI
+- JWT-based authentication with refresh tokens
+- Email verification and password reset flows
+- Rate limiting and security best practices
+- Protected routes with automatic redirects
+
+### 🗄️ **Enterprise Database System**
+- Alembic migrations for schema version control
+- Production connection pooling (20+ concurrent connections)
+- Automated backups with 30-day retention
+- Health checks and monitoring
+- CLI tools for database management
+- SQLite (dev) and PostgreSQL (production) support
+
 ### 🎨 **Beautiful, Calming Interface**
 - Organic geometry with rounded edges and soft glows
 - Breathing animations that make your system feel alive
 - White space-first design philosophy
+- Responsive glassmorphism design throughout
 
 ### 🗺️ **Living System Map**
 - Automatic visualization of your entire architecture
@@ -38,58 +54,60 @@ Aira is a next-generation intelligence platform that allows organizations to see
 
 ## 🚀 Getting Started
 
-### Prerequisites
+### 📖 **Complete Setup Guide**
 
-- **Node.js** 18+ and npm
-- **Python** 3.9+ and pip
-- **OpenAI API Key** (for AI features)
-- **Git** (for repository analysis)
+👉 **See [SETUP_GUIDE.md](SETUP_GUIDE.md) for detailed step-by-step instructions**
 
-### Installation
+The setup guide includes:
+- ✅ Prerequisites checklist
+- ✅ Clone to running app in 5 minutes
+- ✅ Database initialization explained
+- ✅ Troubleshooting common issues
+- ✅ What each file does
+- ✅ Production deployment guide
 
-1. **Clone the repository**
+### Quick Start
+
+**Prerequisites:**
+- Node.js 18+ and npm
+- Python 3.10+ and pip
+- Git
+
+**Installation:**
 ```bash
+# 1. Clone repository
 git clone <repository-url>
 cd aira
-```
 
-2. **Set up Backend**
-```bash
+# 2. Backend setup
 cd backend
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
 pip install -r requirements.txt
 cp .env.example .env
-# Edit .env and add your OPENAI_API_KEY
-```
 
-3. **Set up Frontend**
-```bash
+# 3. Initialize database
+alembic upgrade head
+python scripts/db_manager.py seed  # Optional: create test users
+
+# 4. Frontend setup
 cd ..
 npm install
-```
 
-### Running the Application
-
-**Terminal 1 - Backend:**
-```bash
+# 5. Run application (2 terminals)
+# Terminal 1 - Backend:
 cd backend
-python main.py
-```
-Server starts at `http://localhost:8000`
+uvicorn main:app --reload --port 8000
 
-**Terminal 2 - Frontend:**
-```bash
+# Terminal 2 - Frontend:
 npm run dev
 ```
 
-**Open your browser**
-Navigate to `http://localhost:5173`
+**Open:** http://localhost:5173
 
-### First Steps
-
-1. Complete the onboarding flow
-2. Try analyzing a GitHub repository (e.g., `https://github.com/vercel/next.js`)
-3. Ask AI questions about your architecture
-4. Run simulations to test scenarios
+**Test Login:**
+- Email: `admin@aira.dev` / Password: `admin123`
+- Email: `user@aira.dev` / Password: `user123`
 
 ### Building for Production
 
@@ -201,20 +219,45 @@ aira/
 ### Frontend
 - **Framework**: React 18 + TypeScript
 - **Build Tool**: Vite
-- **Canvas**: React Flow (coming soon)
+- **Routing**: React Router DOM
+- **Canvas**: React Flow
 - **Styling**: Tailwind CSS
 - **Animations**: Framer Motion
 - **Icons**: Lucide React
 - **State**: Zustand + Context API
+- **Forms**: React Hook Form + Zod
+- **Auth**: JWT with automatic refresh
 
 ### Backend
-- **Framework**: FastAPI + Python
+- **Framework**: FastAPI + Python 3.10+
+- **Database**: SQLAlchemy ORM (SQLite/PostgreSQL)
+- **Migrations**: Alembic
+- **Authentication**: JWT (python-jose) + Bcrypt
+- **Email**: SMTP with Jinja2 templates
 - **AI**: OpenAI GPT-4
 - **Git**: GitPython
 - **Server**: Uvicorn
 - **Validation**: Pydantic
+- **CLI**: Click (database management)
 
 ## 🔧 Backend Features
+
+### Authentication System
+- **JWT Tokens**: Access (30min) + Refresh (30 days) tokens
+- **Email Verification**: Required for account activation
+- **Password Reset**: Secure token-based reset flow
+- **Rate Limiting**: 5 failed attempts per 15 minutes
+- **Security**: Bcrypt hashing, token refresh, device tracking
+- **API Endpoints**: 11+ auth endpoints (signup, login, verify, reset, etc.)
+
+### Database System
+- **Migrations**: Alembic for schema version control
+- **Connection Pooling**: 20+ permanent connections (PostgreSQL)
+- **Health Monitoring**: Real-time pool statistics
+- **Automated Backups**: Timestamped backups with 30-day retention
+- **CLI Tools**: 15+ commands (init, migrate, backup, restore, seed, etc.)
+- **Production Ready**: SQLite (dev) → PostgreSQL (prod)
+- **See**: [backend/DATABASE_SETUP.md](backend/DATABASE_SETUP.md) for full guide
 
 ### GitHub Repository Analysis
 - Automatically clones and analyzes any public GitHub repository
