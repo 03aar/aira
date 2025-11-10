@@ -140,7 +140,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         return { success: false, error: error || 'Signup failed' };
       }
 
-      // Don't auto-login, user needs to verify email first
+      // Auto-login after signup (backend returns tokens)
+      saveAuth(data);
       return { success: true };
     } catch (error) {
       return {

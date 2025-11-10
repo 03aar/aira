@@ -55,16 +55,13 @@ class AuthService:
 
         # Create user
         hashed_pwd = hash_password(user_data.password)
-        verification_token = create_verification_token()
 
         user = User(
             email=user_data.email,
             username=user_data.username,
             full_name=user_data.full_name,
             hashed_password=hashed_pwd,
-            verification_token=verification_token,
-            verification_token_expires=datetime.utcnow() + timedelta(days=1),
-            email_verified=False,
+            email_verified=True,  # Auto-verify for simplicity
             is_active=True
         )
 
@@ -72,12 +69,12 @@ class AuthService:
         self.db.commit()
         self.db.refresh(user)
 
-        # Send verification email
-        await self.email_service.send_verification_email(
-            to_email=user.email,
-            username=user.username,
-            verification_token=verification_token
-        )
+        # Skip email verification for now (auto-verify users)
+        # await self.email_service.send_verification_email(
+        #     to_email=user.email,
+        #     username=user.username,
+        #     verification_token=verification_token
+        # )
 
         return user
 

@@ -7,6 +7,7 @@ from fastapi import APIRouter, Depends, HTTPException, status, Request
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from sqlalchemy.orm import Session
 from typing import Optional
+from datetime import datetime
 
 from models.database import get_db
 from models.user import User
@@ -93,25 +94,52 @@ async def get_current_active_verified_user(
 # SIGNUP & LOGIN
 # ============================================================================
 
-@router.post("/signup", response_model=UserResponse, status_code=status.HTTP_201_CREATED)
+@router.post("/signup", response_model=LoginResponse, status_code=status.HTTP_201_CREATED)
 async def signup(
     user_data: UserCreate,
+    request: Request,
     db: Session = Depends(get_db)
 ):
     """
-    Create a new user account
+    Create a new user account and log them in immediately
 
     - **email**: Valid email address
     - **username**: 3-50 characters, alphanumeric + underscores
     - **password**: Minimum 8 characters, must include uppercase, lowercase, and number
     - **full_name**: Optional full name
 
-    Returns the created user (without password)
-    Sends verification email automatically
+    Returns:
+    - **access_token**: Short-lived JWT (30 minutes)
+    - **refresh_token**: Long-lived JWT (30 days)
+    - **user**: User information
+
+    User is auto-verified and logged in immediately
     """
     auth_service = AuthService(db)
+
+    # Create user (auto-verified)
     user = await auth_service.create_user(user_data)
-    return user
+
+    # Get client IP
+    client_ip = request.client.host if request.client else "unknown"
+
+    # Generate tokens and log in immediately
+    tokens = auth_service.create_user_tokens(
+        user_id=user.id,
+        device_info=request.headers.get("User-Agent", "unknown"),
+        ip_address=client_ip
+    )
+
+    # Update last login
+    user.last_login = datetime.utcnow()
+    db.commit()
+
+    return LoginResponse(
+        access_token=tokens["access_token"],
+        refresh_token=tokens["refresh_token"],
+        token_type="bearer",
+        user=user
+    )
 
 @router.post("/login", response_model=LoginResponse)
 async def login(

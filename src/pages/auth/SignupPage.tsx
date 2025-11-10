@@ -48,8 +48,8 @@ const SignupPage: React.FC = () => {
     const result = await signup(signupData);
 
     if (result.success) {
-      // Success! Redirect to email verification notice
-      navigate('/verify-email-notice');
+      // Success! Auto-logged in, redirect to dashboard
+      navigate('/dashboard');
     } else {
       setError(result.error || 'Signup failed');
     }
@@ -73,9 +73,9 @@ const SignupPage: React.FC = () => {
   const strengthLabels = ['Very Weak', 'Weak', 'Fair', 'Good', 'Strong'];
 
   return (
-    <div className="min-h-screen w-full flex items-center justify-center bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 p-4">
+    <div className="min-h-screen w-full bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 py-8 px-4 overflow-y-auto">
       {/* Animated background shapes */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+      <div className="fixed inset-0 overflow-hidden pointer-events-none -z-10">
         <motion.div
           className="absolute top-20 left-20 w-72 h-72 bg-gradient-to-br from-blue-400/20 to-purple-400/20 rounded-full blur-3xl"
           animate={{
@@ -107,7 +107,7 @@ const SignupPage: React.FC = () => {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="w-full max-w-md relative z-10"
+        className="w-full max-w-md mx-auto relative z-10"
       >
         {/* Glassmorphism container */}
         <div className="bg-white/70 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/20 p-8">
